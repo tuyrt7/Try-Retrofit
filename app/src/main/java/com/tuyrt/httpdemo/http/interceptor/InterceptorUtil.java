@@ -3,7 +3,7 @@ package com.tuyrt.httpdemo.http.interceptor;
 import android.util.Log;
 
 import com.tuyrt.httpdemo.App;
-import com.tuyrt.httpdemo.http.AppRestQueue;
+import com.tuyrt.httpdemo.http.RxManager;
 import com.tuyrt.httpdemo.http.entity.TokenVo;
 import com.tuyrt.httpdemo.util.SharedPrefs;
 
@@ -64,7 +64,7 @@ public class InterceptorUtil {
                 String pk = "6cf453f8270d4763ab585fddcff1342d";
                 String mac = "12345678ab";
 
-                TokenVo tokenVo = AppRestQueue.getInstance().getApiRestService()
+                TokenVo tokenVo = RxManager.getInstance().getApiRestService()
                         .getToken(pk, mac).execute().body().getData();
                 String newToken = tokenVo.getAccesstoken();
                 SharedPrefs.putString(App.getContext(), "token", newToken);
