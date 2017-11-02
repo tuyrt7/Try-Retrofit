@@ -22,7 +22,7 @@ public class RxFunction<T> implements Function<BaseEntity<T>, T> {
         return t.getData();
     }
 
- /*   public abstract Observable getObservable(ApiRestService retrofitService);
+ /*   public abstract Observable getObservable(ApiService retrofitService);
 
     public abstract Subscriber getSubscriber();*/
 

@@ -12,7 +12,7 @@ public class HttpConfig {
     public static boolean DEBUG = true;
     public static final int NETWORK_TIMEOUT = 5;
 
-    public static final String GET_ROBOT_INFO =  "body/getRobotChild";  //机器人信息
+    public static final String ROBOTINFO =  "body/getRobotChild";  //机器人信息
     public static final String UPLOAD_STH_URL =  "qcloud/uploadOneFile"; // 上传文件
     public static final String ALL_COMMODITY_URL =  "commodity/all/list";// 商品全部列表
     public static final String ALL_COMMODITY_CAN_BUY =  "commodity/list";// 已经完全解锁的全部商品列表
@@ -21,9 +21,9 @@ public class HttpConfig {
     public static final String GET_STORAGE_URL =  "commodityStorage/list"; // 储藏的所有商品列表
     public static final String USE_COMMODITY_URL =  "commodity/consume"; //使用商品 吃
 
-    public static final String GET_TOKEN =  "body/getAccessToken"; // 得到token
-    public static final String GET_BASE_DATA_POINT =  "body/baseDataPoint"; // 得到 基础设置
-    public static final String Robot_Medal =  "body/getRobotMedal"; // 获取勋章
+    public static final String TOKEN =  "body/getAccessToken"; // 得到token
+    public static final String BASEDATAPOINT =  "body/baseDataPoint"; // 得到 基础设置
+    public static final String MEDAL =  "body/getRobotMedal"; // 获取勋章
     public static final String MESSAGE_LIST =  "body/message/list"; // 消息列表
     public static final String UPGRADE_PACK =  "body/upgradePack/newest"; // 最新升级包
 
@@ -53,7 +53,7 @@ public class HttpConfig {
     public static final String REPORT_CLICK =  "task/click"; //上报点击事件
     public static final String ADD_COLLECT =  "task/addCollect"; //收藏音乐
     public static final String DELEDT_COLLECT =  "task/delCollect?taskId=%s"; //删除收藏音乐
-    public static final String GROWVALUE =  "body/growthValue/statistics";//成长树里面的成长值
+    public static final String GROWNVALUE =  "body/growthValue/statistics";//成长树里面的成长值
 
 
     public static final MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");

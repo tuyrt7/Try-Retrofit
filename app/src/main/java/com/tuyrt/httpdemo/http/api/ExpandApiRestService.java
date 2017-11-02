@@ -1,4 +1,4 @@
-package com.tuyrt.httpdemo.http.service;
+package com.tuyrt.httpdemo.http.api;
 
 /**
  * Created by lytcom on 2017/5/14.

@@ -1,7 +1,7 @@
 package com.tuyrt.httpdemo.http;
 
-import com.tuyrt.httpdemo.http.service.ApiRestService;
-import com.tuyrt.httpdemo.http.service.ExpandApiRestService;
+import com.tuyrt.httpdemo.http.api.ApiService;
+import com.tuyrt.httpdemo.http.api.ExpandApiRestService;
 import com.tuyrt.httpdemo.http.config.HttpConfig;
 import com.tuyrt.httpdemo.http.entity.BaseEntity;
 import com.tuyrt.httpdemo.http.entity.RobotChildVo;
@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RxManager {
 
-    private ApiRestService mApiRestService;
+    private ApiService mApiService;
     private ExpandApiRestService mExpandApiRestService;
     private Map<String, CompositeDisposable> map;
 
@@ -71,12 +71,12 @@ public class RxManager {
         setupOtherService();
     }
 
-    public ApiRestService getApiRestService() {
-        return mApiRestService;
+    public ApiService getApiService() {
+        return mApiService;
     }
     private void setupApiRestService() {
         String endpoint = HttpConfig.BASE_URL;
-        mApiRestService = createRestQueue(ApiRestService.class, endpoint, RestServiceUtils.getApiInterceptors(), false);
+        mApiService = createRestQueue(ApiService.class, endpoint, RestServiceUtils.getApiInterceptors(), false);
     }
 
     //for example
@@ -113,7 +113,7 @@ public class RxManager {
 
     // *--------------------------------------------------------------------
     public Observable<RobotChildVo> getRobotChildInfo() {
-        return mApiRestService.getRobotChildInfo()
+        return mApiService.getRobotChildInfo()
                 .map(new Function<BaseEntity<RobotChildVo>, RobotChildVo>() {
                     @Override
                     public RobotChildVo apply(@NonNull BaseEntity<RobotChildVo> robotChildVoBaseEntity) throws Exception {
@@ -141,7 +141,7 @@ public class RxManager {
     }
 
     public Observable<GitHub> getGitHub() {
-        return mApiRestService.getGitHub().doOnNext(new Consumer<GitHub>() {
+        return mApiService.getGitHub().doOnNext(new Consumer<GitHub>() {
             @Override
             public void accept(@NonNull GitHub gitHub) throws Exception {
                 Timber.i("getGitHub: " + gitHub.getEmailsUrl());
