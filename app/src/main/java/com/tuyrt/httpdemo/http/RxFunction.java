@@ -16,8 +16,8 @@ public class RxFunction<T> implements Function<BaseEntity<T>, T> {
     @Override
     public T apply(@NonNull BaseEntity<T> t) throws RuntimeException {
         int retCode = t.getCode();
-        if (retCode != 200) {
-            throw new ApiException(t.getCode(),t.getMessage());
+        if (retCode != 200 && retCode != 0) {
+            throw new ApiException(t.getCode(), t.getMessage());
         }
         return t.getData();
     }

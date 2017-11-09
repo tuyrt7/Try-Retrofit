@@ -13,6 +13,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -37,4 +38,7 @@ public interface ApiService {
 
     @GET(HttpConfig.GROWNVALUE)
     Observable<BaseEntity<GrowthValueVo>> getGrowValue(@QueryMap(encoded = true) Map<String, Integer> map);
+
+    @DELETE(HttpConfig.DELETE_CONVENTION)
+    Observable<BaseEntity<Void>> deleteConvention(@Query("id") String id);
 }

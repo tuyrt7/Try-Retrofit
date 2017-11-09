@@ -30,7 +30,7 @@ public class HttpConfig {
 
     public static final String GET_ALL_CONVENTION =  "convention/schedule/allConvention"; //获取所有的惯例表
     public static final String GET_CONVENTION_DETAIL =  "convention/schedule/getConvention"; //获取惯例表详情
-    public static final String DELETE_CONVENTION =  "convention/schedule/deleteConvention?id=%s"; //删除惯例表
+    public static final String DELETE_CONVENTION =  "convention/schedule/deleteConvention"; //删除惯例表
     public static final String GET_ALL_SCHEDULE =  "convention/schedule/allSchedule"; //获取所有的日程提醒
     public static final String DELETE_SCHEDULE =  "convention/schedule/deleteSchedule?id=%s"; //删除日程提醒
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tuyrt.httpdemo.http.RxFunction;
 import com.tuyrt.httpdemo.http.RxManager;
@@ -34,6 +35,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -118,6 +120,17 @@ public class MainActivity extends AppCompatActivity implements MedalView {
                 getGrowthValue(params);
                 break;
             case R.id.button5:
+                mRxManager.getApiService().deleteConvention("45ec78f0-7f5e-497c-a2bd-8fae003a30f3")
+                        .compose(RxSchedulers.<BaseEntity>io_main())
+                        .subscribe(new Consumer<BaseEntity>() {
+                            @Override
+                            public void accept(@NonNull BaseEntity baseEntity) throws Exception {
+                                if (baseEntity.getCode() == 204) {
+                                    Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
                 break;
             case R.id.button6:
 

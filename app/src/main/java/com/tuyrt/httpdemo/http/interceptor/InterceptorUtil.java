@@ -62,7 +62,7 @@ public class InterceptorUtil {
             private String getNewToken() throws IOException {
                 //取出本地的refreshToken
                 String pk = "6cf453f8270d4763ab585fddcff1342d";
-                String mac = "12345678ab";
+                String mac = "8888888888";
 
                 TokenVo tokenVo = RxManager.getInstance().getApiService()
                         .getToken(pk, mac).execute().body().getData();
