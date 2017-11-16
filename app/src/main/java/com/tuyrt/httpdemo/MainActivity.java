@@ -3,6 +3,7 @@ package com.tuyrt.httpdemo;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tuyrt.httpdemo.http.RestServiceUtils;
 import com.tuyrt.httpdemo.http.RxFunction;
 import com.tuyrt.httpdemo.http.RxManager;
 import com.tuyrt.httpdemo.http.RxObserver;
@@ -18,6 +20,7 @@ import com.tuyrt.httpdemo.http.entity.BaseDataPointVo;
 import com.tuyrt.httpdemo.http.entity.BaseEntity;
 import com.tuyrt.httpdemo.http.entity.GrowthValueVo;
 import com.tuyrt.httpdemo.http.entity.MedalVo;
+import com.tuyrt.httpdemo.http.entity.QCloudResult;
 import com.tuyrt.httpdemo.http.entity.RobotChildVo;
 import com.tuyrt.httpdemo.mvp.presenter.MedalPresenter;
 import com.tuyrt.httpdemo.mvp.view.MedalView;
@@ -38,6 +41,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MultipartBody;
 
 public class MainActivity extends AppCompatActivity implements MedalView {
     @BindView(R.id.button)
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements MedalView {
         mRxManager = RxManager.getInstance();
 
         //测试地区
-        getLocationInfo();
+        //getLocationInfo();
         mMedalPresenter = new MedalPresenter(this);
     }
 
@@ -133,7 +137,23 @@ public class MainActivity extends AppCompatActivity implements MedalView {
 
                 break;
             case R.id.button6:
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/Screenshots/test1.jpg";
+                MultipartBody.Part uploadFile = RestServiceUtils.buildUploadFilePart("uploadFile", path);
+                mRxManager.getApiService().uploadOneFile(uploadFile)
+                        .map(new RxFunction<QCloudResult>())
+                        .compose(RxSchedulers.<QCloudResult>io_main())
+                        .subscribe(new RxObserver<QCloudResult>(this, TAG, 2, true) {
+                            @Override
+                            public void onSuccess(int whichRequest, QCloudResult qCloudResult) {
+                                Log.i(TAG, "onSuccess: " + qCloudResult.toString());
+                                mText1.setText(qCloudResult.toString());
+                            }
 
+                            @Override
+                            public void onError(int whichRequest, Throwable e) {
+                                Log.i(TAG, "onError: " + whichRequest + "======error=" + e.toString());
+                            }
+                        });
                 break;
         }
     }

@@ -1,7 +1,5 @@
 package com.tuyrt.httpdemo.http.config;
 
-import okhttp3.MediaType;
-
 /**
  * Created by futao on 2017/10/27.
  */
@@ -56,7 +54,5 @@ public class HttpConfig {
     public static final String GROWNVALUE =  "body/growthValue/statistics";//成长树里面的成长值
 
 
-    public static final MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
-    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");
-    public static final MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");
+    public static final String UPLOAD_ONE_FILE =  "qcloud/uploadOneFile"; // 上传文件
 }

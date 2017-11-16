@@ -5,6 +5,7 @@ import com.tuyrt.httpdemo.http.entity.BaseDataPointVo;
 import com.tuyrt.httpdemo.http.entity.BaseEntity;
 import com.tuyrt.httpdemo.http.entity.GrowthValueVo;
 import com.tuyrt.httpdemo.http.entity.MedalVo;
+import com.tuyrt.httpdemo.http.entity.QCloudResult;
 import com.tuyrt.httpdemo.http.entity.RobotChildVo;
 import com.tuyrt.httpdemo.http.entity.TokenVo;
 
@@ -12,9 +13,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
@@ -41,4 +46,8 @@ public interface ApiService {
 
     @DELETE(HttpConfig.DELETE_CONVENTION)
     Observable<BaseEntity<Void>> deleteConvention(@Query("id") String id);
+
+    @Multipart
+    @POST(HttpConfig.UPLOAD_ONE_FILE)
+    Observable<BaseEntity<QCloudResult>> uploadOneFile(@Part MultipartBody.Part file);
 }
