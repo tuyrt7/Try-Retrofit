@@ -5,6 +5,8 @@ import android.util.Log;
 import com.tuyrt.httpdemo.App;
 import com.tuyrt.httpdemo.http.RxManager;
 import com.tuyrt.httpdemo.http.entity.TokenVo;
+import com.tuyrt.httpdemo.http.progress.ProgressListener;
+import com.tuyrt.httpdemo.http.progress.ProgressResponseBody;
 import com.tuyrt.httpdemo.util.SharedPrefs;
 
 import java.io.IOException;
@@ -100,5 +102,16 @@ public class InterceptorUtil {
             }
         };
 
+    }
+
+
+    public static Interceptor ProgressInterceptor(final ProgressListener listener) {
+        return new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Response response = chain.proceed(chain.request());
+                return response.newBuilder().body(new ProgressResponseBody(response.body(), listener)).build();
+            }
+        };
     }
 }

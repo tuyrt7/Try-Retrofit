@@ -11,17 +11,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.tuyrt.httpdemo.http.RestServiceUtils;
 import com.tuyrt.httpdemo.http.RxFunction;
 import com.tuyrt.httpdemo.http.RxManager;
 import com.tuyrt.httpdemo.http.RxObserver;
 import com.tuyrt.httpdemo.http.RxSchedulers;
+import com.tuyrt.httpdemo.http.config.HttpConfig;
 import com.tuyrt.httpdemo.http.entity.BaseDataPointVo;
 import com.tuyrt.httpdemo.http.entity.BaseEntity;
 import com.tuyrt.httpdemo.http.entity.GrowthValueVo;
 import com.tuyrt.httpdemo.http.entity.MedalVo;
 import com.tuyrt.httpdemo.http.entity.QCloudResult;
 import com.tuyrt.httpdemo.http.entity.RobotChildVo;
+import com.tuyrt.httpdemo.http.progress.ProgressListener;
 import com.tuyrt.httpdemo.mvp.presenter.MedalPresenter;
 import com.tuyrt.httpdemo.mvp.view.MedalView;
 import com.tuyrt.httpdemo.util.LocationUtils;
@@ -41,6 +44,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import me.jessyan.progressmanager.ProgressManager;
+import me.jessyan.progressmanager.body.ProgressInfo;
 import okhttp3.MultipartBody;
 
 public class MainActivity extends AppCompatActivity implements MedalView {
@@ -58,22 +63,37 @@ public class MainActivity extends AppCompatActivity implements MedalView {
     Button mButton6;
     @BindView(R.id.text1)
     TextView mText1;
+    @BindView(R.id.number_progress_bar)
+    NumberProgressBar mNumberProgressBar;
 
     private String TAG;
     private RxManager mRxManager;
     private MedalPresenter mMedalPresenter;
+    private ProgressInfo mLastUploadingingInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        initListener();
         TAG = getPackageName() + "." + getClass().getSimpleName();
+
         mRxManager = RxManager.getInstance();
 
         //测试地区
         //getLocationInfo();
         mMedalPresenter = new MedalPresenter(this);
+    }
+
+    private void initListener() {
+        mNumberProgressBar.setMax(100);
+        mNumberProgressBar.setProgress(0);
+
+        // Okhttp/Retofit 下载监听
+        ProgressManager.getInstance().addRequestListener(
+                HttpConfig.BASE_URL + HttpConfig.UPLOAD_ONE_FILE, getUploadProgressListener());
     }
 
 
@@ -102,7 +122,14 @@ public class MainActivity extends AppCompatActivity implements MedalView {
 
     }
 
-    @OnClick({R.id.button, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6})
+    String path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+           // "/Pictures/Screenshots/test1.jpg";
+    "/Movies/Screenrecords/S70421.mp4";
+
+    @OnClick({
+            R.id.button, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6,
+            R.id.button7, R.id.button8, R.id.button9, R.id.button10, R.id.button11, R.id.button12
+    })
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button:
@@ -137,12 +164,12 @@ public class MainActivity extends AppCompatActivity implements MedalView {
 
                 break;
             case R.id.button6:
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/Screenshots/test1.jpg";
+
                 MultipartBody.Part uploadFile = RestServiceUtils.buildUploadFilePart("uploadFile", path);
                 mRxManager.getApiService().uploadOneFile(uploadFile)
                         .map(new RxFunction<QCloudResult>())
                         .compose(RxSchedulers.<QCloudResult>io_main())
-                        .subscribe(new RxObserver<QCloudResult>(this, TAG, 2, true) {
+                        .subscribe(new RxObserver<QCloudResult>(this, TAG, 2, false) {
                             @Override
                             public void onSuccess(int whichRequest, QCloudResult qCloudResult) {
                                 Log.i(TAG, "onSuccess: " + qCloudResult.toString());
@@ -155,7 +182,85 @@ public class MainActivity extends AppCompatActivity implements MedalView {
                             }
                         });
                 break;
+
+            case R.id.button7:
+
+                upload();
+                break;
+            case R.id.button8:
+                break;
+            case R.id.button9:
+                break;
+            case R.id.button10:
+                break;
+            case R.id.button11:
+                break;
+            case R.id.button12:
+                break;
         }
+    }
+
+    private me.jessyan.progressmanager.ProgressListener getUploadProgressListener() {
+        return new me.jessyan.progressmanager.ProgressListener() {
+            @Override
+            public void onProgress(ProgressInfo progressInfo) {
+                // 如果你不屏蔽用户重复点击上传或下载按钮,就可能存在同一个 Url 地址,上一次的上传或下载操作都还没结束,
+                // 又开始了新的上传或下载操作,那现在就需要用到 id(请求开始时的时间) 来区分正在执行的进度信息
+                // 这里我就取最新的上传进度用来展示,顺便展示下 id 的用法
+
+                if (mLastUploadingingInfo == null) {
+                    mLastUploadingingInfo = progressInfo;
+                }
+
+                //因为是以请求开始时的时间作为 Id ,所以值越大,说明该请求越新
+                if (progressInfo.getId() < mLastUploadingingInfo.getId()) {
+                    return;
+                } else if (progressInfo.getId() > mLastUploadingingInfo.getId()) {
+                    mLastUploadingingInfo = progressInfo;
+                }
+
+                int progress = mLastUploadingingInfo.getPercent();
+                mNumberProgressBar.setProgress(progress);
+                //mUploadProgressText.setText(progress + "%");
+                Log.d(TAG, "--Upload-- " + progress + " %  " + mLastUploadingingInfo.getSpeed() + " byte/s  " + mLastUploadingingInfo.toString());
+                if (mLastUploadingingInfo.isFinish()) {
+                    //说明已经上传完成
+                    Log.d(TAG, "--Upload-- finish");
+                }
+            }
+
+            @Override
+            public void onError(long id, Exception e) {
+
+            }
+        };
+    }
+
+
+    private void upload() {
+
+
+        RxManager.getInstance().uploadFile(path, new ProgressListener() {
+            @Override
+            public void onProgress(long currentBytes, long contentLength, boolean done) {
+                Log.i(TAG, "currentBytes==" + currentBytes + "==contentLength==" + contentLength + "==done==" + done);
+                int progress = (int) (currentBytes * 100 / contentLength);
+                mNumberProgressBar.setProgress(progress);
+            }
+        })
+                .map(new RxFunction<QCloudResult>())
+                .compose(RxSchedulers.<QCloudResult>io_main())
+                .subscribe(new RxObserver<QCloudResult>(this, TAG, 0, false) {
+                    @Override
+                    public void onSuccess(int whichRequest, QCloudResult qCloudResult) {
+                        Log.i(TAG, "onSuccess: " + qCloudResult.toString());
+                    }
+
+                    @Override
+                    public void onError(int whichRequest, Throwable e) {
+                        Log.i(TAG, "uploadFile onError:");
+                    }
+                });
     }
 
 

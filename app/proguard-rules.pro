@@ -23,3 +23,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# progressmanager
+#-keep class me.jessyan.progressmanager.** { *; }
+# -keep interface me.jessyan.progressmanager.** { *; }

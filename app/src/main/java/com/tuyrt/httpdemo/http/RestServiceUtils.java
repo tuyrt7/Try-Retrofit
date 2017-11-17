@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
+import me.jessyan.progressmanager.ProgressManager;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -33,6 +34,9 @@ public class RestServiceUtils {
         if (interceptors != null && !interceptors.isEmpty()) {
             builder.interceptors().addAll(interceptors);
         }
+
+        // 构建 OkHttpClient 时,将 OkHttpClient.Builder() 传入 with() 方法,进行初始化配置
+        ProgressManager.getInstance().with(builder);
         return builder.build();
     }
 
